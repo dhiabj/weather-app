@@ -4,11 +4,14 @@ import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useEffect, useState } from 'react';
 import { Weather } from '../lib/definitions';
 import { fetchWeatherByCity } from '../lib/data';
+import moment from 'moment';
 
 export default function Search({
   setWeather,
+  setDateTime,
 }: {
   setWeather: (weather: Weather | null) => void;
+  setDateTime: (dateTime: moment.Moment | null) => void;
 }) {
   const [term, setTerm] = useState<string>('');
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
@@ -20,16 +23,18 @@ export default function Search({
     setSearchHistory(existingHistory);
   }, []);
 
-  async function handleFetchWeatherByCity(term: string) {
+  async function fetchAndUpdateData(term: string) {
     const weatherData = await fetchWeatherByCity(term);
     if (weatherData) {
       setWeather(weatherData);
+      const timezoneOffset = weatherData.timezone;
+      setDateTime(moment().utcOffset(timezoneOffset / 60));
     }
   }
 
   async function handleSearch(term: string) {
     if (term.trim() === '') return;
-    handleFetchWeatherByCity(term);
+    fetchAndUpdateData(term);
     const existingHistory = JSON.parse(
       localStorage.getItem('searchHistory') || '[]'
     );
@@ -70,7 +75,7 @@ export default function Search({
             className="mb-2 flex items-center justify-between capitalize  text-gray-400">
             <span
               className="cursor-pointer hover:text-white"
-              onClick={() => handleFetchWeatherByCity(term)}>
+              onClick={() => fetchAndUpdateData(term)}>
               {term}
             </span>
             <XMarkIcon

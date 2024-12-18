@@ -14,7 +14,7 @@ import {
 export default function Page() {
   const [location, setLocation] = useState<Location>();
   const [weather, setWeather] = useState<Weather | null>(null);
-  const [dateTime, setDateTime] = useState(moment());
+  const [dateTime, setDateTime] = useState<moment.Moment | null>(null);
 
   useEffect(() => {
     if ('geolocation' in navigator) {
@@ -26,22 +26,22 @@ export default function Page() {
   }, []);
 
   useEffect(() => {
-    if (location) {
-      fetchWeatherByCoordinates(location).then((weather) => {
+    async function fetchData(location: Location) {
+      const weather = await fetchWeatherByCoordinates(location);
+      if (weather) {
         setWeather(weather);
-      });
+        const timezoneOffset = weather.timezone;
+        setDateTime(moment().utcOffset(timezoneOffset / 60));
+      }
+    }
+    if (location) {
+      fetchData(location);
     }
   }, [location]);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setDateTime(moment());
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const isDayTime = dateTime.hour() >= 6 && dateTime.hour() < 18;
+  const isDayTime = dateTime
+    ? dateTime.hour() >= 6 && dateTime.hour() < 18
+    : false;
 
   return (
     <div
@@ -61,7 +61,7 @@ export default function Page() {
           </div>
           <div className="text-xl sm:text-3xl">{weather?.name}</div>
           <div className="text-sm sm:text-lg mt-2">
-            {dateTime.format('HH:mm - dddd, D MMM YY')}
+            {dateTime ? dateTime.format('HH:mm - dddd, D MMM YY') : '--:--'}
           </div>
           <div className="flex items-center">
             {weather && (
@@ -79,7 +79,7 @@ export default function Page() {
           </div>
         </div>
         <div className="flex-1 bg-gray-900 text-white p-6 sm:p-10 bg-opacity-75 backdrop-blur-md">
-          <Search setWeather={setWeather} />
+          <Search setWeather={setWeather} setDateTime={setDateTime} />
           <div className="font-bold mb-2 mt-6">Weather Details</div>
           <div>
             <div className="flex justify-between mb-2 text-sm sm:text-base">
