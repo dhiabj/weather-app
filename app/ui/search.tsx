@@ -68,11 +68,11 @@ export default function Search({
           <li
             key={index}
             className="mb-2 flex items-center justify-between capitalize  text-gray-400">
-            <div
+            <span
               className="cursor-pointer hover:text-white"
               onClick={() => handleFetchWeatherByCity(term)}>
               {term}
-            </div>
+            </span>
             <XMarkIcon
               className="h-4 w-4 cursor-pointer hover:text-white"
               onClick={() => handleDelete(index)}

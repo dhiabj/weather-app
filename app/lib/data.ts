@@ -13,7 +13,7 @@ export async function fetchWeatherByCity(
     );
     if (!response.ok) {
       if (response.status === 404) {
-        toast.error('Weather data for the specified city not found.');
+        toast.error('City weather not found.', { theme: 'colored' });
       }
       throw new Error(`Error fetching weather data: ${response.statusText}`);
     }
