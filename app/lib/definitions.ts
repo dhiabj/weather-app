@@ -5,6 +5,7 @@ export interface Weather {
   main: Main;
   visibility: number;
   wind: Wind;
+  rain: Rain;
   clouds: Clouds;
   dt: number;
   sys: Sys;
@@ -16,6 +17,10 @@ export interface Weather {
 
 export interface Clouds {
   all: number;
+}
+
+export interface Rain {
+  '1h': number;
 }
 
 export interface Coord {
@@ -44,7 +49,7 @@ export interface Sys {
 
 export interface WeatherElement {
   id: number;
-  main: string;
+  main: WeatherCondition;
   description: string;
   icon: string;
 }
@@ -54,3 +59,17 @@ export interface Wind {
   deg: number;
   gust: number;
 }
+
+export interface Location {
+  latitude: number;
+  longitude: number;
+}
+
+export type WeatherCondition =
+  | 'Thunderstorm'
+  | 'Drizzle'
+  | 'Rain'
+  | 'Snow'
+  | 'Clear'
+  | 'Clouds'
+  | 'Atmosphere';

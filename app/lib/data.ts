@@ -1,15 +1,45 @@
-import { Weather } from './definitions';
+import { toast } from 'react-toastify';
+import { Location, Weather } from './definitions';
 
-const weatherKey = process.env.WEATHER_API_KEY;
+const weatherKey = process.env.NEXT_PUBLIC_WEATHER_API;
+const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
 
-export async function fetchWeather(city: string): Promise<Weather | null> {
+export async function fetchWeatherByCity(
+  city: string
+): Promise<Weather | null> {
   try {
     const response = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${weatherKey}`
+      `${baseURL}/weather?q=${city}&appid=${weatherKey}&units=metric`
     );
-    return response.json();
+    if (!response.ok) {
+      if (response.status === 404) {
+        toast.error('Weather data for the specified city not found.');
+      }
+      throw new Error(`Error fetching weather data: ${response.statusText}`);
+    }
+    const data: Weather = await response.json();
+    return data;
   } catch (error) {
-    console.error(error);
+    console.log(error);
+    return null;
+  }
+}
+
+export async function fetchWeatherByCoordinates(
+  location: Location
+): Promise<Weather | null> {
+  const { latitude, longitude } = location;
+  try {
+    const response = await fetch(
+      `${baseURL}/weather?lat=${latitude}&lon=${longitude}&appid=${weatherKey}&units=metric`
+    );
+    if (!response.ok) {
+      throw new Error(`Error fetching weather data: ${response.statusText}`);
+    }
+    const data: Weather = await response.json();
+    return data;
+  } catch (error) {
+    console.log(error);
     return null;
   }
 }
