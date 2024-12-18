@@ -52,7 +52,7 @@ export default function Page() {
               weather.weather[0].main,
               isDayTime
             )}')`
-          : 'radial-gradient( circle farthest-corner at 10% 20%,  rgba(2,37,78,1) 0%, rgba(4,56,126,1) 19.7%, rgba(85,245,221,1) 100.2% )',
+          : 'linear-gradient(to top, #fff1eb 0%, #ace0f9 100%)',
       }}>
       <div className="flex flex-col sm:flex-row w-full max-w-6xl h-full sm:h-3/4">
         <div className="text-white flex-none sm:w-3/5 p-6 sm:p-10 bg-gray-800 bg-opacity-75">
