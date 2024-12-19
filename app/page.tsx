@@ -16,7 +16,6 @@ export default function Page() {
   const [location, setLocation] = useState<Location | null>(null);
   const [weather, setWeather] = useState<Weather | null>(null);
   const [enabled, setEnabled] = useState(false);
-  const [term, setTerm] = useState('');
   const [unit, setUnit] = useState('metric');
   const [isNewLocation, setIsNewLocation] = useState(false);
 
@@ -118,8 +117,6 @@ export default function Page() {
         <div className="flex-1 bg-gray-900 text-white p-6 sm:p-10 bg-opacity-75 backdrop-blur-md">
           <Search
             setWeather={setWeather}
-            setTerm={setTerm}
-            term={term}
             setIsNewLocation={setIsNewLocation}
             unit={unit}
           />

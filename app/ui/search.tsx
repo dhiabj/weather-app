@@ -7,17 +7,14 @@ import { fetchWeatherByCity } from '../lib/data';
 
 export default function Search({
   setWeather,
-  setTerm,
   setIsNewLocation,
-  term,
   unit,
 }: {
   setWeather: (weather: Weather | null) => void;
-  setTerm: (term: string) => void;
   setIsNewLocation: (isSearching: boolean) => void;
-  term: string;
   unit: string;
 }) {
+  const [term, setTerm] = useState('');
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
 
   useEffect(() => {
