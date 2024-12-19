@@ -13,5 +13,5 @@ A simple single-page responsive weather app developed using Nextjs, TypeScript, 
 - **Search History:** Display the recent top 5 searches for quick access.
 - **Unit Conversion:** Allow users to toggle between Celsius and Fahrenheit.
 
-##External APIs
+## External APIs
 - Weather data is provided by the [OpenWeather API](https://openweathermap.org/api)
