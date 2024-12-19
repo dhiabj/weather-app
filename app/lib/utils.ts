@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { WeatherCondition } from './definitions';
 
 export function generateWeatherIconUrl(icon: string): string {
@@ -6,8 +7,14 @@ export function generateWeatherIconUrl(icon: string): string {
 
 export function generateBackgroundImageUrl(
   main: WeatherCondition,
-  isDay: boolean
+  sunrise: number,
+  sunset: number,
+  timezone: number
 ) {
+  const currentTime = moment()
+    .utcOffset(timezone / 60)
+    .unix();
+  const isDay = currentTime >= sunrise && currentTime < sunset;
   const backgrounds: Record<WeatherCondition, string> = {
     Thunderstorm: '/thunderstorm.jpg',
     Drizzle: '/rain.jpg',

@@ -4,14 +4,11 @@ import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useEffect, useState } from 'react';
 import { Weather } from '../lib/definitions';
 import { fetchWeatherByCity } from '../lib/data';
-import moment from 'moment';
 
 export default function Search({
   setWeather,
-  setDateTime,
 }: {
   setWeather: (weather: Weather | null) => void;
-  setDateTime: (dateTime: moment.Moment | null) => void;
 }) {
   const [term, setTerm] = useState<string>('');
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
@@ -27,8 +24,6 @@ export default function Search({
     const weatherData = await fetchWeatherByCity(term);
     if (weatherData) {
       setWeather(weatherData);
-      const timezoneOffset = weatherData.timezone;
-      setDateTime(moment().utcOffset(timezoneOffset / 60));
     }
   }
 
