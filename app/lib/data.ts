@@ -5,11 +5,12 @@ const weatherKey = process.env.NEXT_PUBLIC_WEATHER_API;
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export async function fetchWeatherByCity(
-  city: string
+  city: string,
+  unit: string
 ): Promise<Weather | null> {
   try {
     const response = await fetch(
-      `${baseURL}/weather?q=${city}&appid=${weatherKey}&units=metric`
+      `${baseURL}/weather?q=${city}&appid=${weatherKey}&units=${unit}`
     );
     if (!response.ok) {
       if (response.status === 404) {
@@ -26,12 +27,13 @@ export async function fetchWeatherByCity(
 }
 
 export async function fetchWeatherByCoordinates(
-  location: Location
+  location: Location,
+  unit: string
 ): Promise<Weather | null> {
   const { latitude, longitude } = location;
   try {
     const response = await fetch(
-      `${baseURL}/weather?lat=${latitude}&lon=${longitude}&appid=${weatherKey}&units=metric`
+      `${baseURL}/weather?lat=${latitude}&lon=${longitude}&appid=${weatherKey}&units=${unit}`
     );
     if (!response.ok) {
       throw new Error(`Error fetching weather data: ${response.statusText}`);

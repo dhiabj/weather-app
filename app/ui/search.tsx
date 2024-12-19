@@ -7,10 +7,17 @@ import { fetchWeatherByCity } from '../lib/data';
 
 export default function Search({
   setWeather,
+  setTerm,
+  setIsNewLocation,
+  term,
+  unit,
 }: {
   setWeather: (weather: Weather | null) => void;
+  setTerm: (term: string) => void;
+  setIsNewLocation: (isSearching: boolean) => void;
+  term: string;
+  unit: string;
 }) {
-  const [term, setTerm] = useState<string>('');
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
 
   useEffect(() => {
@@ -21,9 +28,10 @@ export default function Search({
   }, []);
 
   async function fetchAndUpdateData(term: string) {
-    const weatherData = await fetchWeatherByCity(term);
+    const weatherData = await fetchWeatherByCity(term, unit);
     if (weatherData) {
       setWeather(weatherData);
+      setIsNewLocation(true);
     }
   }
 
@@ -36,7 +44,6 @@ export default function Search({
     const updatedHistory = [...existingHistory, term];
     localStorage.setItem('searchHistory', JSON.stringify(updatedHistory));
     setSearchHistory(updatedHistory);
-    setTerm('');
   }
 
   function handleDelete(indexToDelete: number) {
@@ -53,7 +60,7 @@ export default function Search({
           type="text"
           value={term}
           placeholder="Another location"
-          className="peer block w-full py-[9px] pl-10 bg-transparent border-b outline-none placeholder:text-gray-500"
+          className="peer block w-full py-[9px] pl-10 bg-transparent border-b outline-none placeholder:text-gray-500 capitalize"
           onChange={(e) => setTerm(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
@@ -67,10 +74,13 @@ export default function Search({
         {searchHistory.slice(-5).map((term, index) => (
           <li
             key={index}
-            className="mb-2 flex items-center justify-between capitalize  text-gray-400">
+            className="mb-2 flex items-center justify-between capitalize text-gray-400">
             <span
               className="cursor-pointer hover:text-white"
-              onClick={() => fetchAndUpdateData(term)}>
+              onClick={() => {
+                setTerm(term);
+                fetchAndUpdateData(term);
+              }}>
               {term}
             </span>
             <XMarkIcon
