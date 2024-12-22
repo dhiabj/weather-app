@@ -7,11 +7,9 @@ import { fetchWeatherByCity } from '../lib/data';
 
 export default function Search({
   setWeather,
-  setIsNewLocation,
   unit,
 }: {
   setWeather: (weather: Weather | null) => void;
-  setIsNewLocation: (isSearching: boolean) => void;
   unit: string;
 }) {
   const [term, setTerm] = useState('');
@@ -28,7 +26,6 @@ export default function Search({
     const weatherData = await fetchWeatherByCity(term, unit);
     if (weatherData) {
       setWeather(weatherData);
-      setIsNewLocation(true);
     }
   }
 

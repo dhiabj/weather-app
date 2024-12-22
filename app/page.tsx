@@ -4,9 +4,10 @@ import Image from 'next/image';
 import Search from './ui/search';
 import { useEffect, useState } from 'react';
 import { Location, Weather } from './lib/definitions';
-import { fetchWeatherByCity, fetchWeatherByCoordinates } from './lib/data';
+import { fetchWeatherByCoordinates } from './lib/data';
 import moment from 'moment';
 import {
+  celsiusToFahrenheit,
   generateBackgroundImageUrl,
   generateWeatherIconUrl,
 } from './lib/utils';
@@ -17,7 +18,6 @@ export default function Page() {
   const [weather, setWeather] = useState<Weather | null>(null);
   const [enabled, setEnabled] = useState(false);
   const [unit, setUnit] = useState('metric');
-  const [isNewLocation, setIsNewLocation] = useState(false);
 
   useEffect(() => {
     if ('geolocation' in navigator) {
@@ -39,20 +39,18 @@ export default function Page() {
     fetchData();
   }, [location]);
 
-  async function handleUnitChange() {
+  function handleUnitChange() {
     setEnabled(!enabled);
     setUnit(unit === 'metric' ? 'imperial' : 'metric');
-    const currentUnit = unit === 'metric' ? 'imperial' : 'metric';
-    if (isNewLocation && weather) {
-      const weatherData = await fetchWeatherByCity(weather.name, currentUnit);
-      setWeather(weatherData);
-    } else if (location) {
-      const weatherData = await fetchWeatherByCoordinates(
-        location,
-        currentUnit
-      );
-      setWeather(weatherData);
+  }
+
+  function displayTemperature() {
+    if (!weather) return '--';
+    const temp = Math.round(weather.main.temp);
+    if (enabled) {
+      return celsiusToFahrenheit(temp);
     }
+    return temp;
   }
 
   return (
@@ -72,7 +70,7 @@ export default function Page() {
         <div className="text-white flex-none sm:w-3/5 p-6 sm:p-10 bg-gray-800 bg-opacity-75">
           <div className="flex justify-between">
             <div className="text-4xl sm:text-6xl">
-              {weather ? weather.main.temp : '--'}
+              {displayTemperature()}
               {unit === 'metric' ? '°C' : '°F'}
             </div>
             <div className="flex items-center gap-2">
@@ -115,11 +113,7 @@ export default function Page() {
           </div>
         </div>
         <div className="flex-1 bg-gray-900 text-white p-6 sm:p-10 bg-opacity-75 backdrop-blur-md">
-          <Search
-            setWeather={setWeather}
-            setIsNewLocation={setIsNewLocation}
-            unit={unit}
-          />
+          <Search setWeather={setWeather} unit={unit} />
           <div className="font-bold mb-2 mt-6">Weather Details</div>
           <div>
             <div className="flex justify-between mb-2 text-sm sm:text-base">
@@ -132,11 +126,7 @@ export default function Page() {
             </div>
             <div className="flex justify-between mb-2 text-sm sm:text-base">
               <span>Wind</span>
-              <span>
-                {weather
-                  ? weather.wind.speed + `${unit === 'metric' ? 'm/s' : 'mph'}`
-                  : '--'}
-              </span>
+              <span>{weather ? weather.wind.speed + 'm/s' : '--'}</span>
             </div>
             <div className="flex justify-between mb-2 text-sm sm:text-base">
               <span>Pressure</span>

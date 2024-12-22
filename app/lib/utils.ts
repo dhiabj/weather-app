@@ -26,3 +26,7 @@ export function generateBackgroundImageUrl(
   };
   return backgrounds[main] || (isDay ? '/clear_day.jpg' : '/clear_night.jpg');
 }
+
+export function celsiusToFahrenheit(celsius: number) {
+  return (celsius * 9) / 5 + 32;
+}
