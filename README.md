@@ -2,6 +2,8 @@
 
 ![Screenshot 2024-12-19 202334](https://github.com/user-attachments/assets/dd807c45-0597-40f0-a3f6-d0fbadc4169e)
 
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://weather-app-beryl-seven-94.vercel.app/) 
+
 ## Description
 A simple single-page responsive weather app developed using Nextjs, TypeScript, and Tailwind CSS that displays current weather information for any location worldwide.
 
